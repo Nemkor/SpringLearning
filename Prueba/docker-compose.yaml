@@ -1,0 +1,65 @@
+version: "3.8"
+services:
+  mensajes-app:
+    container_name: mensajes-app
+    image: prueba_mensajes:beta3
+    networks:
+      - prueba
+    restart: always
+    ports:
+      - "8080:8080"
+  mensajes-app1:
+    container_name: mensajes-app1
+    image: prueba_mensajes:beta3
+    networks:
+      - prueba
+    restart: always
+    ports:
+      - "8081:8080"
+  mensajes-app2:
+    container_name: mensajes-app2
+    image: prueba_mensajes:beta3
+    networks:
+      - prueba
+    restart: always
+    ports:
+      - "8082:8080"
+  mongo:
+    image: mongo:latest
+    restart: always
+    environment:
+      - MONGO_INITDB_DATABASE=prueba-db
+      - MONGO_INITDB_ROOT_USERNAME=dani
+      - MONGO_INITDB_ROOT_PASSWORD=dani
+    volumes:
+      - ./mongodb/init-mongo.js:/docker-entrypoint-initdb.d/init-mongo.js:ro
+      - ./mongo-volume:/data/db
+    ports:
+      - "27017-27019:27017-27019"
+  nginx:
+    build: ./nginx
+    ports:
+      - "80:80"
+    depends_on:
+      - mensajes-app
+      - mensajes-app1
+      - mensajes-app2
+    networks:
+      - prueba
+  redis:
+    container_name: redis
+    hostname: redis
+    image: redis:latest
+    ports:
+      - "6379:6379"
+  redis-commander:
+    container_name: redis-commander
+    image: rediscommander/redis-commander:latest
+    restart: always
+    environment:
+      - REDIS_HOSTS=local:redis:6379
+    ports:
+      - "8083:8081"
+networks:
+  prueba:
+    name: prueba-network

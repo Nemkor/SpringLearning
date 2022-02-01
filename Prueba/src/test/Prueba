@@ -1,0 +1,10 @@
+int[] d =[1, 1,1, 2,2,,233]
+array = [0-9,10-19,20-29,30-39...]
+
+int[] a = [dsfsdfsdfsdf]
+for (iont i)
+    if (i<10)
+        d[0]++;
+        else if (i<20)
+            d[1]++;
+            else if (
